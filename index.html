@@ -15,7 +15,7 @@
     <select id="pageSelect">
         <!-- 頁數選擇將會由 JavaScript 動態生成 -->
     </select>
-    <button onclick="saveProgress()">📌 記住進度</button>
+    <button id="saveButton" onclick="saveProgress()">📌 記住進度</button>
     <p id="progressMessage"></p>
 
     <script>
@@ -28,6 +28,7 @@
             select.appendChild(option);
         }
 
+        // 儲存進度並顯示訊息
         function saveProgress() {
             var page = document.getElementById("pageSelect").value;
             if (page) {
@@ -36,7 +37,12 @@
                     document.getElementById("progressMessage").innerHTML = 
                         "✅ 進度已記住！請貼到記事本或書籤保存：<br>" +
                         "<a href='" + url + "' target='_blank'>" + url + "</a>";
+                }).catch(err => {
+                    console.error('Failed to copy: ', err);
+                    document.getElementById("progressMessage").innerHTML = "❌ 無法複製進度連結，請手動複製。";
                 });
+            } else {
+                document.getElementById("progressMessage").innerHTML = "❌ 請選擇頁數！";
             }
         }
     </script>
