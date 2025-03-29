@@ -2,10 +2,30 @@
 <html lang="zh-TW">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="refresh" content="0; url=index.pdf">
-    <title>Loading...</title>
+    <title>小說閱讀</title>
 </head>
 <body>
-    <p>如果沒有自動跳轉，請 <a href="index.pdf">點擊這裡</a>。</p>
+    <h1>📖 小說閱讀</h1>
+
+    <!-- 直接開啟 PDF -->
+    <p><a href="index.pdf" target="_blank">📂 直接開啟小說 PDF</a></p>
+
+    <!-- 記住閱讀進度 -->
+    <button onclick="saveProgress()">📌 記住進度</button>
+    <p id="progressMessage"></p>
+
+    <script>
+        function saveProgress() {
+            var page = prompt("請輸入你目前的頁數：");
+            if (page) {
+                var url = "index.pdf#page=" + page;
+                navigator.clipboard.writeText(url).then(() => {
+                    document.getElementById("progressMessage").innerHTML = 
+                        "✅ 進度已記住！請貼到記事本或書籤保存：<br>" +
+                        "<a href='" + url + "' target='_blank'>" + url + "</a>";
+                });
+            }
+        }
+    </script>
 </body>
 </html>
