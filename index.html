@@ -11,12 +11,25 @@
     <p><a href="index.pdf" target="_blank">📂 直接開啟小說 PDF</a></p>
 
     <!-- 記住閱讀進度 -->
+    <p>選擇你目前讀到的頁數：</p>
+    <select id="pageSelect">
+        <!-- 頁數選擇將會由 JavaScript 動態生成 -->
+    </select>
     <button onclick="saveProgress()">📌 記住進度</button>
     <p id="progressMessage"></p>
 
     <script>
+        // 動態生成頁數選項（1到300）
+        var select = document.getElementById("pageSelect");
+        for (var i = 1; i <= 300; i++) {
+            var option = document.createElement("option");
+            option.value = i;
+            option.textContent = i;
+            select.appendChild(option);
+        }
+
         function saveProgress() {
-            var page = prompt("請輸入你目前的頁數：");
+            var page = document.getElementById("pageSelect").value;
             if (page) {
                 var url = "index.pdf#page=" + page;
                 navigator.clipboard.writeText(url).then(() => {
