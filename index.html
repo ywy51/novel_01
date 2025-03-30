@@ -1,62 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDF 閱讀器</title>
-  <style>
-    /* PDF 容器 */
-    #pdfContainer {
-      width: 100%;
-      height: 80vh;
-    }
-
-    .controls {
-      margin: 10px;
-    }
-
-    input, button {
-      padding: 10px;
-      margin-right: 10px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="0; url=index.pdf">
+    <title>Loading...</title>
 </head>
 <body>
-
-  <!-- PDF 顯示區 -->
-  <div id="pdfContainer">
-    <iframe id="pdfIframe" width="100%" height="100%"></iframe>
-  </div>
-
-  <!-- 頁數輸入和跳轉按鈕 -->
-  <div class="controls">
-    <label for="pageInput">跳轉到頁數：</label>
-    <input type="number" id="pageInput" min="1">
-    <button onclick="jumpToPage()">跳轉</button>
-  </div>
-
-  <script>
-    // 讀取上次記錄的頁數，預設為 1
-    let currentPage = localStorage.getItem("currentPage") || 1;
-
-    // 載入 PDF 並跳轉到記錄的頁數
-    function loadPDF() {
-      document.getElementById("pdfIframe").src = index.pdf#page=${currentPage};
-    }
-
-    // 跳轉頁面並記錄頁數
-    function jumpToPage() {
-      let pageNumber = document.getElementById('pageInput').value;
-      if (pageNumber) {
-        currentPage = pageNumber;
-        localStorage.setItem("currentPage", currentPage);
-        document.getElementById("pdfIframe").src = index.pdf#page=${currentPage};
-      }
-    }
-
-    // 進入頁面時載入 PDF
-    window.onload = loadPDF;
-  </script>
-
+    <p>如果沒有自動跳轉，請 <a href="index.pdf">點擊這裡</a>。</p>
 </body>
 </html>
