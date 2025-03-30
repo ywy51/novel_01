@@ -1,131 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDF 與頁數選擇</title>
-  <style>
-    /* 設定 PDF 容器 */
-    #pdfContainer {
-      width: 100%;
-      height: 80vh;
-      overflow: auto;
-      position: relative;
-    }
-    
-    /* 設定彈出視窗的樣式 */
-    #pageSelectorModal {
-      display: none; /* 初始隱藏 */
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background-color: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 20px;
-      border-radius: 10px;
-      z-index: 1000;
-      width: 300px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>你的網站標題</title>
 
-    #pageSelectorModal input {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-    }
+    <!-- Google Fonts：Noto Sans TC（無襯線），Noto Serif TC（類似標楷體） -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
 
-    /* 遮罩層 */
-    #overlay {
-      display: none; /* 初始隱藏 */
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 999;
-    }
-  </style>
+    <style>
+        /* 讓整個網頁內容置中 /
+        body {
+            text-align: center;
+            max-width: 800px;
+            margin: auto;
+            font-family: "Noto Sans TC", sans-serif !important; / 預設使用 Noto Sans TC /
+        }
+
+        / 偵測 Google 文件匯出的 "標楷體" 或 "DFKai-SB"，改成 Noto Serif TC /
+        body:has([style="DFKai-SB"]), 
+        body:has([style*="標楷體"]), 
+        [style="DFKai-SB"], 
+        [style="標楷體"] {
+            font-family: "Noto Serif TC", serif !important;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- PDF 顯示區 -->
-  <div id="pdfContainer">
-    <iframe src="your-pdf-url.pdf" id="pdfIframe" width="100%" height="100%" onload="loadLastPage()"></iframe>
-  </div>
-
-  <!-- 遮罩層 -->
-  <div id="overlay"></div>
-
-  <!-- 頁數選擇彈出視窗 -->
-  <div id="pageSelectorModal">
-    <h3>選擇頁數</h3>
-    <input type="number" id="pageInput" placeholder="輸入頁數" min="1">
-    <button onclick="jumpToPage()">跳轉</button>
-    <button onclick="closeModal()">取消</button>
-  </div>
-
-  <button onclick="openModal()">選擇頁數</button>
-
-  <script>
-    // 當前頁數記錄
-    let currentPage = localStorage.getItem("currentPage") || 1; // 如果沒有記錄，默認為第 1 頁
-
-    // 打開彈出視窗
-    function openModal() {
-      document.getElementById('overlay').style.display = 'block';
-      document.getElementById('pageSelectorModal').style.display = 'block';
-      document.getElementById('pageInput').value = currentPage; // 頁數輸入框顯示當前頁
-    }
-
-    // 關閉彈出視窗
-    function closeModal() {
-      document.getElementById('overlay').style.display = 'none';
-      document.getElementById('pageSelectorModal').style.display = 'none';
-    }
-
-    // 跳轉頁面
-    function jumpToPage() {
-      const pageNumber = document.getElementById('pageInput').value;
-      if (pageNumber) {
-        currentPage = pageNumber; // 記錄新的頁數
-        localStorage.setItem("currentPage", currentPage); // 儲存當前頁數
-        // 這裡可以處理根據頁數進行跳轉的邏輯
-        console.log(跳轉到第 ${pageNumber} 頁);
-        // 例如，調整 iframe 的頁數顯示
-        document.getElementById("pdfIframe").contentWindow.location.hash = #page=${pageNumber};
-      }
-      closeModal(); // 跳轉後關閉視窗
-    }
-
-    // 載入頁面時自動恢復上次頁數
-    function loadLastPage() {
-      if (currentPage) {
-        // 這裡使用 iframe 的 hash 跳轉功能，假設 PDF 支援 #page 跳轉
-        document.getElementById("pdfIframe").contentWindow.location.hash = #page=${currentPage};
-      }
-    }
-
-    // 監聽頁面變動，隨時記錄當前頁數
-    document.getElementById("pdfIframe").addEventListener("load", function() {
-      // 假設這裡能夠獲取到 PDF 的當前頁數，可以根據實際情況修改
-      let pageNum = getCurrentPageNumberFromIframe(); 
-      if (pageNum) {
-        currentPage = pageNum;
-        localStorage.setItem("currentPage", currentPage); // 記錄當前頁數
-      }
-    });
-
-    // 假設這個函數能返回 PDF 當前頁數，根據你使用的 PDF 閱讀器不同而改變實現
-    function getCurrentPageNumberFromIframe() {
-      const iframe = document.getElementById("pdfIframe");
-      if (iframe && iframe.contentWindow) {
-        // 假設 PDF.js 或其他 PDF 閱讀器有這樣的 API
-        return iframe.contentWindow.getCurrentPageNumber(); // 示例，實際 API 根據使用的 PDF 閱讀器不同而變
-      }
-      return 1; // 默認返回第 1 頁
-    }
-  </script>
+    <h1>這是網站標題</h1>
+    <p>這是你的內文。所有微軟正黑體會變成 Noto Sans TC，標楷體會變成 Noto Serif TC。</p>
+    <p style="font-family: DFKai-SB;">這是標楷體（會自動變成 Noto Serif TC）</p>
 
 </body>
 </html>
