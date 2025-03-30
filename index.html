@@ -1,36 +1,126 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>你的網站標題</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF 閱讀器</title>
+  <style>
+    /* 設定 PDF 容器 */
+    #pdfContainer {
+      width: 100%;
+      height: 80vh;
+      overflow: auto;
+      position: relative;
+    }
+    
+    /* 設定彈出視窗的樣式 */
+    #pageSelectorModal {
+      display: none; /* 初始隱藏 */
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      color: black;
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 1000;
+      width: 300px;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+    }
 
-    <!-- Google Fonts：Noto Sans TC（無襯線），Noto Serif TC（類似標楷體） -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700&family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
+    #pageSelectorModal input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
 
-    <style>
-        /* 讓整個網頁內容置中 /
-        body {
-            text-align: center;
-            max-width: 800px;
-            margin: auto;
-            font-family: "Noto Sans TC", sans-serif !important; / 預設使用 Noto Sans TC /
-        }
+    /* 遮罩層 */
+    #overlay {
+      display: none; /* 初始隱藏 */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
 
-        / 偵測 Google 文件匯出的 "標楷體" 或 "DFKai-SB"，改成 Noto Serif TC /
-        body:has([style="DFKai-SB"]), 
-        body:has([style*="標楷體"]), 
-        [style="DFKai-SB"], 
-        [style="標楷體"] {
-            font-family: "Noto Serif TC", serif !important;
-        }
-    </style>
+    /* 頁數選擇按鈕 */
+    #pageButton {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #007BFF;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+  </style>
 </head>
 <body>
 
-    <h1>這是網站標題</h1>
-    <p>這是你的內文。所有微軟正黑體會變成 Noto Sans TC，標楷體會變成 Noto Serif TC。</p>
-    <p style="font-family: DFKai-SB;">這是標楷體（會自動變成 Noto Serif TC）</p>
+  <!-- PDF 顯示區 -->
+  <div id="pdfContainer">
+    <iframe id="pdfIframe" width="100%" height="100%"></iframe>
+  </div>
+
+  <!-- 遮罩層 -->
+  <div id="overlay"></div>
+
+  <!-- 頁數選擇彈出視窗 -->
+  <div id="pageSelectorModal">
+    <h3>選擇頁數</h3>
+    <input type="number" id="pageInput" placeholder="輸入頁數" min="1">
+    <button onclick="jumpToPage()">跳轉</button>
+    <button onclick="closeModal()">取消</button>
+  </div>
+
+  <button id="pageButton" onclick="openModal()">選擇頁數</button>
+
+  <script>
+    // 獲取本地存儲的頁數，默認為第 1 頁
+    let currentPage = localStorage.getItem("currentPage") || 1;
+
+    // 設定 PDF 檔案路徑
+    const pdfUrl = "index.pdf";
+
+    // 載入 PDF，並跳轉到上次記錄的頁數
+    function loadPDF() {
+      document.getElementById("pdfIframe").src = ${pdfUrl}#page=${currentPage};
+    }
+
+    // 打開彈出視窗
+    function openModal() {
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById('pageSelectorModal').style.display = 'block';
+      document.getElementById('pageInput').value = currentPage; // 頁數輸入框顯示當前頁
+    }
+
+    // 關閉彈出視窗
+    function closeModal() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('pageSelectorModal').style.display = 'none';
+    }
+
+    // 跳轉到指定頁數
+    function jumpToPage() {
+      const pageNumber = document.getElementById('pageInput').value;
+      if (pageNumber) {
+        currentPage = pageNumber; // 記錄新的頁數
+        localStorage.setItem("currentPage", currentPage); // 儲存到本地
+        document.getElementById("pdfIframe").src = ${pdfUrl}#page=${currentPage};
+      }
+      closeModal(); // 關閉彈出視窗
+    }
+
+    // 初次加載時載入 PDF
+    window.onload = loadPDF;
+  </script>
 
 </body>
 </html>
