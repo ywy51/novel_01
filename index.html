@@ -1,50 +1,131 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>小說閱讀</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PDF 與頁數選擇</title>
+  <style>
+    /* 設定 PDF 容器 */
+    #pdfContainer {
+      width: 100%;
+      height: 80vh;
+      overflow: auto;
+      position: relative;
+    }
+    
+    /* 設定彈出視窗的樣式 */
+    #pageSelectorModal {
+      display: none; /* 初始隱藏 */
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 20px;
+      border-radius: 10px;
+      z-index: 1000;
+      width: 300px;
+    }
+
+    #pageSelectorModal input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    /* 遮罩層 */
+    #overlay {
+      display: none; /* 初始隱藏 */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+  </style>
 </head>
 <body>
-    <h1>📖 小說閱讀</h1>
 
-    <!-- 直接開啟 PDF -->
-    <p><a href="index.pdf" target="_blank">📂 直接開啟小說 PDF</a></p>
+  <!-- PDF 顯示區 -->
+  <div id="pdfContainer">
+    <iframe src="your-pdf-url.pdf" id="pdfIframe" width="100%" height="100%" onload="loadLastPage()"></iframe>
+  </div>
 
-    <!-- 記住閱讀進度 -->
-    <p>選擇你目前讀到的頁數：</p>
-    <select id="pageSelect">
-        <!-- 頁數選擇將會由 JavaScript 動態生成 -->
-    </select>
-    <button id="saveButton" onclick="saveProgress()">📌 記住進度</button>
-    <p id="progressMessage"></p>
+  <!-- 遮罩層 -->
+  <div id="overlay"></div>
 
-    <script>
-        // 動態生成頁數選項（1到300）
-        var select = document.getElementById("pageSelect");
-        for (var i = 1; i <= 300; i++) {
-            var option = document.createElement("option");
-            option.value = i;
-            option.textContent = i;
-            select.appendChild(option);
-        }
+  <!-- 頁數選擇彈出視窗 -->
+  <div id="pageSelectorModal">
+    <h3>選擇頁數</h3>
+    <input type="number" id="pageInput" placeholder="輸入頁數" min="1">
+    <button onclick="jumpToPage()">跳轉</button>
+    <button onclick="closeModal()">取消</button>
+  </div>
 
-        // 儲存進度並顯示訊息
-        function saveProgress() {
-            var page = document.getElementById("pageSelect").value;
-            if (page) {
-                var url = "index.pdf#page=" + page;
-                navigator.clipboard.writeText(url).then(() => {
-                    document.getElementById("progressMessage").innerHTML = 
-                        "✅ 進度已記住！請貼到記事本或書籤保存：<br>" +
-                        "<a href='" + url + "' target='_blank'>" + url + "</a>";
-                }).catch(err => {
-                    console.error('Failed to copy: ', err);
-                    document.getElementById("progressMessage").innerHTML = "❌ 無法複製進度連結，請手動複製。";
-                });
-            } else {
-                document.getElementById("progressMessage").innerHTML = "❌ 請選擇頁數！";
-            }
-        }
-    </script>
+  <button onclick="openModal()">選擇頁數</button>
+
+  <script>
+    // 當前頁數記錄
+    let currentPage = localStorage.getItem("currentPage") || 1; // 如果沒有記錄，默認為第 1 頁
+
+    // 打開彈出視窗
+    function openModal() {
+      document.getElementById('overlay').style.display = 'block';
+      document.getElementById('pageSelectorModal').style.display = 'block';
+      document.getElementById('pageInput').value = currentPage; // 頁數輸入框顯示當前頁
+    }
+
+    // 關閉彈出視窗
+    function closeModal() {
+      document.getElementById('overlay').style.display = 'none';
+      document.getElementById('pageSelectorModal').style.display = 'none';
+    }
+
+    // 跳轉頁面
+    function jumpToPage() {
+      const pageNumber = document.getElementById('pageInput').value;
+      if (pageNumber) {
+        currentPage = pageNumber; // 記錄新的頁數
+        localStorage.setItem("currentPage", currentPage); // 儲存當前頁數
+        // 這裡可以處理根據頁數進行跳轉的邏輯
+        console.log(跳轉到第 ${pageNumber} 頁);
+        // 例如，調整 iframe 的頁數顯示
+        document.getElementById("pdfIframe").contentWindow.location.hash = #page=${pageNumber};
+      }
+      closeModal(); // 跳轉後關閉視窗
+    }
+
+    // 載入頁面時自動恢復上次頁數
+    function loadLastPage() {
+      if (currentPage) {
+        // 這裡使用 iframe 的 hash 跳轉功能，假設 PDF 支援 #page 跳轉
+        document.getElementById("pdfIframe").contentWindow.location.hash = #page=${currentPage};
+      }
+    }
+
+    // 監聽頁面變動，隨時記錄當前頁數
+    document.getElementById("pdfIframe").addEventListener("load", function() {
+      // 假設這裡能夠獲取到 PDF 的當前頁數，可以根據實際情況修改
+      let pageNum = getCurrentPageNumberFromIframe(); 
+      if (pageNum) {
+        currentPage = pageNum;
+        localStorage.setItem("currentPage", currentPage); // 記錄當前頁數
+      }
+    });
+
+    // 假設這個函數能返回 PDF 當前頁數，根據你使用的 PDF 閱讀器不同而改變實現
+    function getCurrentPageNumberFromIframe() {
+      const iframe = document.getElementById("pdfIframe");
+      if (iframe && iframe.contentWindow) {
+        // 假設 PDF.js 或其他 PDF 閱讀器有這樣的 API
+        return iframe.contentWindow.getCurrentPageNumber(); // 示例，實際 API 根據使用的 PDF 閱讀器不同而變
+      }
+      return 1; // 默認返回第 1 頁
+    }
+  </script>
+
 </body>
 </html>
