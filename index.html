@@ -1,83 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>小說閱讀器</title>
-  <style>
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-    }
-    iframe {
-      width: 100%;
-      height: 90vh;
-      border: none;
-    }
-    #controls {
-      height: 10vh;
-      padding: 10px;
-      background-color: #f0f0f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    input[type="number"] {
-      width: 80px;
-      padding: 5px;
-    }
-    button {
-      padding: 5px 10px;
-    }
-  </style>
+  <title>跳轉到PDF</title>
+  <meta http-equiv="refresh" content="0;url=https://你的使用者名稱.github.io/倉庫名稱/檔案.pdf">
 </head>
 <body>
-
-  <!-- 控制區：輸入頁數與跳轉按鈕 -->
-  <div id="controls">
-    <label for="pageInput">跳轉到第</label>
-    <input type="number" id="pageInput" min="1">
-    <label>頁</label>
-    <button onclick="jumpToPage()">跳轉</button>
-  </div>
-
-  <!-- PDF 顯示區 -->
-  <iframe id="pdfFrame"></iframe>
-
-  <script>
-    const iframe = document.getElementById("pdfFrame");
-    const pageInput = document.getElementById("pageInput");
-    const savedPage = localStorage.getItem("pdfPage") || 1;
-
-    // 載入 PDF，從上次閱讀頁數開始
-    iframe.src = index.pdf#page=${savedPage};
-
-    // 設定輸入框預設值
-    pageInput.value = savedPage;
-
-    // 點擊跳轉按鈕
-    function jumpToPage() {
-      const page = parseInt(pageInput.value);
-      if (page > 0) {
-        localStorage.setItem("pdfPage", page);
-        iframe.src = index.pdf#page=${page};
-      }
-    }
-
-    // 定時儲存頁數（每秒一次）
-    setInterval(() => {
-      try {
-        const innerHash = iframe.contentWindow.location.hash;
-        const match = innerHash.match(/page=(\d+)/);
-        if (match) {
-          localStorage.setItem("pdfPage", match[1]);
-        }
-      } catch (e) {
-        // 可能會遇到跨域限制，忽略即可
-      }
-    }, 1000);
-  </script>
-
+  如果沒有自動跳轉，<a href="https://你的使用者名稱.github.io/倉庫名稱/檔案.pdf">請點這裡</a>。
 </body>
 </html>
